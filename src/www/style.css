@@ -1,0 +1,36 @@
+* {
+   font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+html {
+   background-color: #303030;
+   color: white;
+}
+
+h1, h2, h3 {
+   font-weight: 300;
+}
+
+h4, h5, h6 {
+   font-weight: 400;
+}
+
+.bodyDiv {
+   margin-left: 16px;
+   margin-right: 16px;
+   padding-top: 1px;
+   padding-bottom: 12px;
+}
+
+.inline {
+   display: inline;
+}
+
+.title {
+   margin-left: 10px;
+   display: inline;
+}
+
+.pane {
+   border: 1px solid black;
+}
