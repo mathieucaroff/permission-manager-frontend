@@ -45,7 +45,12 @@
 - [v] User/Group detail view
 
 - [] Add `type` fields to User and Group
+
   - [] Make things more object-oriented
+
+- [] Improve the internal model.
+  - `XLoadable` doesn't provide any benefit, is quite a hassle to work with.
+  - How to deal with pagination -> Provide another set of states?
 
 ## Todo not too soon
 

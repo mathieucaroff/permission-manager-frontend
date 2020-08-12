@@ -4,6 +4,7 @@ import { Group, User } from '../../../model/model'
 import { selectedGroup, selectedUser } from '../../../state/positionalState'
 import { groupTable, userGroupAssociationTable, userTable } from '../../../state/tableState'
 import { CardView } from '../CardView/CardView'
+import { Outline } from '../../util/Outline/Outline'
 
 export interface DetailUserViewProp {}
 
@@ -25,7 +26,6 @@ let selectedUserGroupRelatedList = selector({
          associationList.state !== 'hasValue' ||
          groupList.state !== 'hasValue'
       ) {
-         console.log('selectedUserGroupRelatedList abort', { user, associationList, groupList })
          return undefined
       }
 
@@ -36,8 +36,6 @@ let selectedUserGroupRelatedList = selector({
             relatedGroupSet[groupId] = true
          }
       })
-
-      console.log(relatedGroupSet)
 
       return groupList.value.filter((user) => relatedGroupSet[user.id])
    },
@@ -55,7 +53,6 @@ let selectedGroupUserRelatedList = selector({
          associationList.state !== 'hasValue' ||
          userList.state !== 'hasValue'
       ) {
-         console.log('selectedGroupUserRelatedList abort', { group, associationList, userList })
          return undefined
       }
 
@@ -66,8 +63,6 @@ let selectedGroupUserRelatedList = selector({
             relatedUserSet[userId] = true
          }
       })
-
-      console.log(relatedUserSet)
 
       return userList.value.filter((user) => relatedUserSet[user.id])
    },
@@ -84,8 +79,6 @@ export let DetailView = (prop: DetailViewProp) => {
       return null
    }
 
-   console.log({ selectedThing })
-
    let name: string
    if (userOrGroup) {
       let u: User = selectedThing
@@ -96,13 +89,13 @@ export let DetailView = (prop: DetailViewProp) => {
    }
 
    return (
-      <>
+      <Outline>
          <h2>{name}</h2>
          <CardView
             kind={userOrGroup ? 'group' : 'user'}
             thingList={selectedThingRelatedList}
             unlinkTarget={selectedThing}
          />
-      </>
+      </Outline>
    )
 }

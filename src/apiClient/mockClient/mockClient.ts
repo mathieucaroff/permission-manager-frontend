@@ -2,6 +2,7 @@ import { Group, User, UserGroupAssociation } from '../../model/model'
 import { GroupId, UserId } from '../../model/typeAlias'
 import { Client, ClientStatus, UserGroupAssociationFilter } from '../apiClient'
 import { withIndex } from '../../util/withIndex'
+import { jsonDeepCopy } from '../../util/jsonDeepCopy'
 
 type MockUser = User
 type MockGroup = Group
@@ -9,10 +10,10 @@ type MockUserGroupAssociation = UserGroupAssociation
 interface MockData {
    userList: MockUser[]
    groupList: MockGroup[]
-   groupUserAssociationList: MockUserGroupAssociation[]
+   userGroupAssociationList: MockUserGroupAssociation[]
 }
 
-const initialMockData: Readonly<MockData> = {
+let initialMockData: Readonly<MockData> = {
    userList: [
       {
          id: 1,
@@ -36,46 +37,54 @@ const initialMockData: Readonly<MockData> = {
          name: 'human',
       },
    ],
-   groupUserAssociationList: [
+   userGroupAssociationList: [
       [1, 1],
       [3, 1],
    ].map(([userId, groupId]) => ({ userId, groupId })),
 }
 
-let oneSecond = () => {
-   return new Promise((resolve) => setTimeout(resolve, 1000))
+let duration = (timeMs: number) => {
+   return new Promise((resolve) => setTimeout(resolve, timeMs))
 }
 
+let randomDuration = () => duration(1000 * (Math.random() * 0.2 + 0.2))
+
 export let createMockClient = (): Client => {
-   let localData: MockData = JSON.parse(JSON.stringify(initialMockData))
+   let localData: MockData = jsonDeepCopy(initialMockData)
 
    return {
       async addUserToGroup(userId: UserId, groupId: GroupId): Promise<ClientStatus> {
-         let filtered = localData.groupUserAssociationList.filter(
+         let filtered = localData.userGroupAssociationList.filter(
             (association) => association.userId === userId && association.groupId === groupId,
          )
 
          let status: ClientStatus['status'] = 'failure'
          if (filtered.length === 0) {
-            localData.groupUserAssociationList.push({ userId, groupId })
+            localData.userGroupAssociationList.push({ userId, groupId })
             status = 'success'
          }
+
+         await randomDuration()
 
          return { status }
       },
       async removeUserFromGroup(userId: UserId, groupId: GroupId): Promise<ClientStatus> {
-         let filteredWithIndex = localData.groupUserAssociationList
+         let filteredWithIndex = localData.userGroupAssociationList
             .map(withIndex)
             .filter(
                ([association, k]) =>
                   association.userId === userId && association.groupId === groupId,
             )
 
+         filteredWithIndex.reverse()
+
          let status: ClientStatus['status'] = 'failure'
          filteredWithIndex.forEach(([_, index]) => {
-            localData.groupUserAssociationList.splice(index, 1)
+            localData.userGroupAssociationList.splice(index, 1)
             status = 'success'
          })
+
+         await randomDuration()
 
          return { status }
       },
@@ -87,9 +96,9 @@ export let createMockClient = (): Client => {
             })
          }
 
-         await oneSecond()
+         await randomDuration()
 
-         return result
+         return jsonDeepCopy(result)
       },
       async getUserList(search?: string): Promise<User[]> {
          let result = localData.userList
@@ -99,14 +108,14 @@ export let createMockClient = (): Client => {
             })
          }
 
-         await oneSecond()
+         await randomDuration()
 
-         return result
+         return jsonDeepCopy(result)
       },
       async getUserGroupAssociationList(
          filter: UserGroupAssociationFilter = {},
       ): Promise<UserGroupAssociation[]> {
-         let result = localData.groupUserAssociationList
+         let result = localData.userGroupAssociationList
 
          if (filter.groupId !== undefined) {
             result = result.filter((association) => {
@@ -120,9 +129,9 @@ export let createMockClient = (): Client => {
             })
          }
 
-         await oneSecond()
+         await randomDuration()
 
-         return result
+         return jsonDeepCopy(result)
       },
    }
 }

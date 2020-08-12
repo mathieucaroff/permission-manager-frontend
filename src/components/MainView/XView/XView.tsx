@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { Group, User } from '../../../model/model'
-import { GroupId, UserId } from '../../../model/typeAlias'
+import { useRecoilValue } from 'recoil'
 import { groupTable, userTable } from '../../../state/tableState'
 import { XLoadable } from '../../../util/XLoadable'
-import { selectedGroup, selectedUser } from '../../../state/positionalState'
 import { CardView } from '../CardView/CardView'
 import { DetailView } from '../DetailView/DetailView'
+import { useStyle } from '../../style/style'
 
 export interface UserViewProp {}
 
@@ -20,15 +18,15 @@ export type CardViewProp = (
 }
 
 export let XView = (prop: CardViewProp) => {
+   let styleClass = useStyle()
    let userOrGroup = prop.kind === 'user'
    let loadable = useRecoilValue<XLoadable<any[]>>(userOrGroup ? userTable : groupTable)
-   let isAvailable = loadable.state === 'hasValue'
 
    let polish = (content: React.ReactNode) => (
-      <>
-         <h3>{prop.title}</h3>
+      <div className={styleClass.xview}>
+         <h2>{prop.title}</h2>
          {content}
-      </>
+      </div>
    )
 
    if (loadable.state === 'loading') {
@@ -39,12 +37,14 @@ export let XView = (prop: CardViewProp) => {
 
    return polish(
       <>
-         <CardView kind={prop.kind} thingList={loadable.value} />
+         <div className={styleClass.firstCardView}>
+            <CardView kind={prop.kind} thingList={loadable.value} />
+         </div>
          <DetailView kind={prop.kind} />
       </>,
    )
 }
 
-export let UserView = (prop: UserViewProp) => XView({ ...prop, kind: 'user', title: 'User' })
+export let UserView = (prop: UserViewProp) => XView({ ...prop, kind: 'user', title: 'Users' })
 
-export let GroupView = (prop: GroupViewProp) => XView({ ...prop, kind: 'group', title: 'Group' })
+export let GroupView = (prop: GroupViewProp) => XView({ ...prop, kind: 'group', title: 'Groups' })

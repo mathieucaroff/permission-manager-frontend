@@ -12,7 +12,7 @@ function main() {
       let div = document.createElement('div')
       div.innerHTML = githubCornerHTML(packageInfo.repository)
 
-      let title = document.getElementById('title')!
+      let title = document.querySelector('.title')!
       title.textContent = document.title
    } catch (e) {
       console.error(e)

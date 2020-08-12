@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Group, User } from '../../../model/model'
 import { XCard, XCardProp } from '../XCard/XCard'
+import { useStyle } from '../../style/style'
 
 export interface UserViewProp {
    thingList: User[]
@@ -15,6 +16,8 @@ export interface GroupViewProp {
 export type CardViewProp = (UserViewProp & { kind: 'user' }) | (GroupViewProp & { kind: 'group' })
 
 export let CardView = (prop: CardViewProp) => {
+   let styleClass = useStyle()
+
    return (
       <>
          {(prop.thingList as (User | Group)[]).map((target) => (

@@ -1,28 +1,12 @@
-import {
-   Box,
-   Button,
-   Card,
-   CardActions,
-   CardContent,
-   createStyles,
-   makeStyles,
-} from '@material-ui/core'
+import { Box, Button, Card, CardActions, CardContent } from '@material-ui/core'
 import DragIndicator from '@material-ui/icons/DragIndicator'
 import LinkOff from '@material-ui/icons/LinkOff'
 import * as React from 'react'
 import { useSetRecoilState } from 'recoil'
-import { createApiClient } from '../../../apiClient/apiClient'
 import { Group, User } from '../../../model/model'
-import { GroupId, UserId } from '../../../model/typeAlias'
 import { selectedGroup, selectedUser } from '../../../state/positionalState'
-
-let useStyle = makeStyles((theme) =>
-   createStyles({
-      card: {
-         margin: '10px 20px',
-      },
-   }),
-)
+import { useStyle } from '../../style/style'
+import { useClient } from '../../../hook/clientHook/clientHook'
 
 export interface UserCardProp {
    target: User
@@ -38,6 +22,7 @@ export type XCardProp = (UserCardProp & { kind: 'user' }) | (GroupCardProp & { k
 
 export let XCard = (prop: XCardProp) => {
    let styleClass = useStyle()
+   let client = useClient()
    let userOrGroup = prop.kind === 'user'
    let setSelectedThing = useSetRecoilState((userOrGroup ? selectedUser : selectedGroup) as any)
 
@@ -52,8 +37,6 @@ export let XCard = (prop: XCardProp) => {
       <Button
          size="small"
          onClick={() => {
-            let client = createApiClient()
-
             let [userId, groupId] = userOrGroup
                ? [prop.target.id, prop.unlinkTarget!.id]
                : [prop.unlinkTarget!.id, prop.target.id]

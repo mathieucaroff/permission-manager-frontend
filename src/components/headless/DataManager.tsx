@@ -1,7 +1,7 @@
-import { atom, useRecoilState, useSetRecoilState } from 'recoil'
 import { useEffect } from 'react'
-import { userTable, userGroupAssociationTable, groupTable } from '../../state/tableState'
-import { createApiClient } from '../../apiClient/apiClient'
+import { atom, useRecoilState, useSetRecoilState } from 'recoil'
+import { groupTable, userGroupAssociationTable, userTable } from '../../state/tableState'
+import { useClient } from '../../hook/clientHook/clientHook'
 
 let dataLoadStarted = atom({
    key: 'dataLoadStarted',
@@ -20,11 +20,11 @@ export let DataManager = () => {
    let setGroupTable = useSetRecoilState(groupTable)
    let setUserGroupAssociationTable = useSetRecoilState(userGroupAssociationTable)
 
+   let client = useClient()
+
    let effect = () => {}
    if (!done) {
       effect = () => {
-         let client = createApiClient()
-
          client.getUserList().then((value) => {
             setUserTable({
                state: 'hasValue',
