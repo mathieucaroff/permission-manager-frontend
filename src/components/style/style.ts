@@ -4,7 +4,7 @@ export let useStyle = makeStyles((theme: Theme) =>
    createStyles({
       mainView: {
          '& > *': {
-            display: 'inline table',
+            display: 'inline-table',
             width: '50%',
             minWidth: 'unset',
             maxWidth: 'unset',
