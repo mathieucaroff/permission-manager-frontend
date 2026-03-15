@@ -1,5 +1,7 @@
 # Admin Permission Mangement Frontend
 
+[![preview](./doc/screencap.png)](https://permission-manager.vercel.app/)
+
 ## Ability
 
 - [ ] Add users to groups (via drag-n-drop)
@@ -45,7 +47,6 @@
 - [v] User/Group detail view
 
 - [] Add `type` fields to User and Group
-
   - [] Make things more object-oriented
 
 - [] Improve the internal model.
